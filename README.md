@@ -7,6 +7,8 @@ This is my solution to the [Simmple Monitoring project](https://roadmap.sh/proje
 - [Project Requirements](#project-requirements)
 - [Prerequisites](#prerequisites)
 - [Step-By-Step](#step-by-step)
+  - [Install Netdata](#install-netdata)
+  - [Create Alarm](#create-alarm)
 - [Author](#author)
 
 ## References
@@ -19,7 +21,7 @@ This is my solution to the [Simmple Monitoring project](https://roadmap.sh/proje
 - [x] Configure Netdata to monitor basic system metrics such as CPU, memory usage, and disk I/O.
 - [x] Access the Netdata dashboard through a web browser.
 - [x] Customize at least one aspect of the dashboard (e.g., add a new chart or modify an existing one).
-- [ ] Set up an alert for a specific metric (e.g., CPU usage above 80%).
+- [x] Set up an alert for a specific metric (e.g., CPU usage above 80%).
 - [x] `setup.sh`: A shell script to install Netdata on a new system.
 - [ ] `test_dashboard.sh`: Script to put some load on the system and test the monitoring dashboard.
 - [ ] `cleanup.sh`: Script to clean up the system and remove the Netdata agent.
@@ -29,6 +31,8 @@ This is my solution to the [Simmple Monitoring project](https://roadmap.sh/proje
 - Linux OS (AlamLinux 9.5 Minimal)
 
 ## Step-By-Step
+
+### Install Netdata
 
 - Verify script integrity
 ```bash
@@ -48,6 +52,25 @@ sudo firewall-cmd --permanent --add-port=19999/tcp
 sudo systemctl reload firewalld
 ```
 - Access Netdata dashboard through web browser `http://NODEIP:19999`
+
+### Create Alarm
+
+- Use `/etc/netdata/edit-config.` or `nano`/`vi` to create custom alert `/etc/netdata/health.d/cpu_usage.conf`
+```
+alarm: cpu_usage
+template: cpu_usage
+on: system.cpu
+lookup: average -1m percentage of usage
+every: 10s
+warn: $this > 80
+crit: $this > 90
+delay: up 1m down 15s
+info: CPU usage over the last minute is above 80%
+```
+- Reload `netdata`
+```bash
+sudo systemctl restart netdata
+```
 
 ## Author
 
