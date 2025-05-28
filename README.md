@@ -9,11 +9,15 @@ This is my solution to the [Simmple Monitoring project](https://roadmap.sh/proje
 - [Step-By-Step](#step-by-step)
   - [Install Netdata](#install-netdata)
   - [Create Alarm](#create-alarm)
+  - [Apply load to the system](#apply-load-to-the-system)
+  - [Uninstall Netdata](#uninstall-netdata)
 - [Author](#author)
 
 ## References
 
 - [Netdata Agent Installation](https://learn.netdata.cloud/docs/netdata-agent/installation)
+- [Linux Server Performance Monitoring with Netdata (2022)](https://www.linuxbabe.com/monitoring/linux-server-performance-monitoring-with-netdata)
+- [stress man](https://linux.die.net/man/1/stress)
 
 ## Project Requirements
 
@@ -23,12 +27,13 @@ This is my solution to the [Simmple Monitoring project](https://roadmap.sh/proje
 - [x] Customize at least one aspect of the dashboard (e.g., add a new chart or modify an existing one).
 - [x] Set up an alert for a specific metric (e.g., CPU usage above 80%).
 - [x] `setup.sh`: A shell script to install Netdata on a new system.
-- [ ] `test_dashboard.sh`: Script to put some load on the system and test the monitoring dashboard.
-- [ ] `cleanup.sh`: Script to clean up the system and remove the Netdata agent.
+- [x] `test_dashboard.sh`: Script to put some load on the system and test the monitoring dashboard.
+- [x] `cleanup.sh`: Script to clean up the system and remove the Netdata agent.
 
 ## Prerequisites
 
 - Linux OS (AlamLinux 9.5 Minimal)
+- `stress` package installed
 
 ## Step-By-Step
 
@@ -57,10 +62,12 @@ sudo systemctl reload firewalld
 
 - Use `/etc/netdata/edit-config.` or `nano`/`vi` to create custom alert `/etc/netdata/health.d/cpu_usage.conf`
 ```
-alarm: cpu_usage
-template: cpu_usage
-on: system.cpu
-lookup: average -1m percentage of usage
+# high_cpu_usage.conf
+
+alarm: high_cpu_usage
+on: system.cpu.utilization
+lookup: average -1m percentage of utilization
+units: "%"
 every: 10s
 warn: $this > 80
 crit: $this > 90
@@ -70,6 +77,24 @@ info: CPU usage over the last minute is above 80%
 - Reload `netdata`
 ```bash
 sudo systemctl restart netdata
+```
+
+### Apply load to the system
+
+- Install `stress` package
+```bash
+sudo dnf install stress
+```
+- Apply load
+```bash
+stress --cpu 2 --timeout 60s
+```
+
+### Uninstall Netdata
+
+- Use recommended by Netdata script to uninstall
+```bash
+curl https://get.netdata.cloud/kickstart.sh > /tmp/netdata-kickstart.sh && sh /tmp/netdata-kickstart.sh --uninstall
 ```
 
 ## Author
