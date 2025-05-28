@@ -1,4 +1,5 @@
 #!/bin/bash
+# Install and setup Netdata
 
 # Verify script integrity
 [ "cefd628b28aa4bf637a6388041133677" = "$(curl -Ss https://get.netdata.cloud/kickstart.sh | md5sum | cut -d ' ' -f 1)" ] && echo "OK, VALID" || echo "FAILED, INVALID"
