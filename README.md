@@ -1,6 +1,6 @@
 # 🚦 Simple Monitoring Project for [roadmap.sh](https://roadmap.sh/)
 
-This is my solution to the [Simmple Monitoring project](https://roadmap.sh/projects/simple-monitoring-dashboard) in the [DevOps roadmap](https://roadmap.sh/devops) from [roadmap.sh](https://roadmap.sh/)
+This is my solution to the [Simple Monitoring project](https://roadmap.sh/projects/simple-monitoring-dashboard) in the [DevOps roadmap](https://roadmap.sh/devops) from [roadmap.sh](https://roadmap.sh/)
 
 **Table of Contents**
 - [References](#references)
